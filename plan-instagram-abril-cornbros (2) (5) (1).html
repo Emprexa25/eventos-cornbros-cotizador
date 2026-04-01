@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Instagram Abril — Corn Bros</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --amarillo: #F5C842;
+    --verde: #2D6A4F;
+    --verde-light: #E8F5EE;
+    --naranja: #E76F1B;
+    --naranja-light: #FEF0E6;
+    --morado: #6B4FA0;
+    --morado-light: #F0EBFA;
+    --rosa: #C94B8A;
+    --rosa-light: #FCE8F4;
+    --gris: #6B6B6B;
+    --gris-light: #F4F3F1;
+    --bg: #FAFAF8;
+    --card: #FFFFFF;
+    --border: #E8E6E0;
+    --text: #1A1A1A;
+    --text-muted: #888;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--verde);
+    padding: 2rem 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--amarillo);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+
+  header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 1rem 2rem;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--gris);
+    font-weight: 500;
+  }
+
+  .leg-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    min-height: calc(100vh - 120px);
+  }
+
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { position: static; border-left: none; border-top: 1px solid var(--border); }
+  }
+
+  .cal-wrap {
+    padding: 1.5rem 2rem 2rem;
+    overflow-y: auto;
+  }
+
+  .day-headers {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0,1fr));
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .day-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 4px 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0,1fr));
+    gap: 5px;
+  }
+
+  .day {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 6px 8px;
+    min-height: 90px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+
+  .day:hover {
+    border-color: var(--verde);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(45,106,79,0.1);
+  }
+
+  .day.active {
+    border-color: var(--verde);
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+  }
+
+  .day.empty {
+    background: transparent;
+    border-color: transparent;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .day-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+
+  .pill {
+    font-size: 8.5px;
+    font-weight: 600;
+    border-radius: 3px;
+    padding: 2px 5px;
+    margin-bottom: 2px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.2px;
+  }
+
+  .pill.promo    { background: #FEF0E6; color: #C05000; }
+  .pill.eventos  { background: #F0EBFA; color: #5A3A8A; }
+  .pill.fecha    { background: #E8F5EE; color: #1A5C3A; }
+  .pill.reel     { background: #FEE8E0; color: #A03A1A; }
+  .pill.story    { background: #FCE8F4; color: #8A2A5A; }
+  .pill.detras   { background: #F4F3F1; color: #4A4A4A; }
+
+  .sidebar {
+    border-left: 1px solid var(--border);
+    background: #fff;
+    position: sticky;
+    top: 88px;
+    height: calc(100vh - 88px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .sidebar-empty .icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+  }
+
+  .sidebar-empty p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .detail {
+    padding: 1.5rem;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .detail.visible { display: flex; }
+
+  .detail-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+
+  .detail-day {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--verde);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .detail-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .detail-formato {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+  .detail-section {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 5px;
+  }
+
+  .detail-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .feedback-box {
+    background: #FFFBEC;
+    border: 1px solid #F5C842;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: auto;
+  }
+
+  .feedback-box .feedback-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #7A6000;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 5px;
+  }
+
+  .feedback-box p {
+    font-size: 12px;
+    color: #5A4500;
+    line-height: 1.5;
+  }
+
+  .instrucciones {
+    background: var(--verde);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 12px;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .instrucciones strong {
+    color: var(--amarillo);
+    font-weight: 600;
+  }
+
+  .instrucciones span {
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Plan de Contenido Instagram — Abril 2025</h1>
+  <p>Corn Bros · Para revisión y autorización del equipo</p>
+</header>
+
+<div class="instrucciones">
+  <strong>¿Cómo usar este calendario?</strong>
+  <span>Haz clic en cualquier día para ver el detalle del contenido planeado. Revisa cada publicación y envía tu feedback por WhatsApp indicando: <strong>Día + qué cambiar</strong>. Si todo está bien, responde con ✅</span>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:#E76F1B"></div>Promo del mes</div>
+  <div class="leg"><div class="leg-dot" style="background:#6B4FA0"></div>Cotizador/eventos</div>
+  <div class="leg"><div class="leg-dot" style="background:#2D6A4F"></div>Fecha alusiva</div>
+  <div class="leg"><div class="leg-dot" style="background:#C94B8A"></div>Reel</div>
+  <div class="leg"><div class="leg-dot" style="background:#D4537E"></div>Historia/Story</div>
+  <div class="leg"><div class="leg-dot" style="background:#888"></div>Detrás de cámaras</div>
+</div>
+
+<div class="main">
+  <div class="cal-wrap">
+    <div class="day-headers">
+      <div class="day-header">Dom</div>
+      <div class="day-header">Lun</div>
+      <div class="day-header">Mar</div>
+      <div class="day-header">Mié</div>
+      <div class="day-header">Jue</div>
+      <div class="day-header">Vie</div>
+      <div class="day-header">Sáb</div>
+    </div>
+    <div class="cal-grid" id="cal"></div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-empty" id="empty">
+      <div class="icon">📅</div>
+      <p>Toca cualquier día del calendario para ver el detalle del contenido planeado.</p>
+    </div>
+    <div class="detail" id="detail">
+      <div class="detail-header">
+        <div class="detail-day" id="d-day"></div>
+        <div class="detail-title" id="d-title"></div>
+        <div class="detail-formato" id="d-formato"></div>
+      </div>
+      <div class="tag-row" id="d-tags"></div>
+      <div class="detail-section">
+        <div class="detail-label">Objetivo</div>
+        <div class="detail-text" id="d-objetivo"></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">Nota de producción</div>
+        <div class="detail-text" id="d-nota"></div>
+      </div>
+      <div class="feedback-box">
+        <div class="feedback-label">¿Cómo dar feedback?</div>
+        <p>Envía por WhatsApp:<br><strong>Día [número] — [qué cambiar]</strong><br>Ej: "Día 23 — agregar promoción especial para niños"<br><br>Si autorizas sin cambios: <strong>✅</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tagLabels = {
+  promo: "Promo del mes",
+  eventos: "Cotizador/Eventos",
+  fecha: "Fecha alusiva",
+  reel: "Reel",
+  story: "Historia/Story",
+  detras: "Detrás de cámaras"
+};
+
+const data = [
+  { n:1, titulo:"Lanzamiento promo abril", formato:"Post estático + Historia destacada", objetivo:"Anunciar la promo del mes: compra $200 y tu refresco es gratis. Primera publicación oficial de la promo — debe quedar guardada en Historias Destacadas.", nota:"Diseño limpio con la promo bien visible. Fijar en perfil y guardar en highlights de 'Promociones'.", tags:["promo","story"] },
+  { n:2, titulo:"Detrás de cámaras — preparación", formato:"Reel 15-30 segundos", objetivo:"Mostrar el proceso de preparación del elote desde la cocina. Humanizar la marca y generar curiosidad.", nota:"Música de fondo trendy, sin texto pesado. Ritmo rápido, cortes ágiles.", tags:["reel","detras"] },
+  { n:3, titulo:"Refuerzo promo en historia", formato:"Historia con sticker de encuesta", objetivo:"Recordar la promo activa de forma interactiva. Generar engagement desde el primer día.", nota:"Sticker de encuesta: '¿Ya conoces nuestra promo de abril?' — Sí / Todavía no.", tags:["story","promo"] },
+  { n:4, titulo:"Intro cotizador de eventos", formato:"Post estático con diseño", objetivo:"Presentar el cotizador de eventos por primera vez en el mes. Posicionar a Corn Bros como opción para eventos.", nota:"Texto claro: '¿Tienes un evento en abril? Cotiza aquí' — link en bio al cotizador.", tags:["eventos"] },
+  { n:5, titulo:"Puntos de venta activos", formato:"Historia casual", objetivo:"Mostrar que ambas ubicaciones están activas: Ortiz Mena y Sandín.", nota:"Etiqueta la ubicación en la historia. Puede ser una foto simple del punto de venta en operación.", tags:["story","detras"] },
+  { n:6, titulo:"Domingo de Ramos — contenido de temporada", formato:"Post con efecto o animación", objetivo:"Conectar con la temporada de Semana Santa + recordar promo vigente.", nota:"Diseño festivo de temporada. Mensaje: la familia ya tiene plan para Semana Santa.", tags:["promo","fecha"] },
+  { n:7, titulo:"Día Mundial de la Salud + producto estrella", formato:"Reel 30 segundos + Historia", objetivo:"Conectar el Día Mundial de la Salud con los ingredientes naturales del elote. Close-up del producto con ángulo de bienestar. Humanizar la marca desde lo natural.", nota:"🌍 7 de abril — Día Mundial de la Salud. Texto: 'El maíz es vida — y nosotros lo sabemos bien'. Sin narración, solo música y sonido ambiente. Historia complementaria con dato curioso del maíz.", tags:["reel","fecha"] },
+  { n:8, titulo:"¿Cómo funciona el cotizador?", formato:"Historia en serie de 3-4 slides", objetivo:"Enseñar paso a paso cómo usar el cotizador de eventos. Romper la barrera de no saber cómo pedir.", nota:"Slide final con llamada a acción y link en bio. Simple, claro, sin saturar de texto.", tags:["story","eventos"] },
+  { n:9, titulo:"Testimonial de cliente", formato:"Reel o historia con texto", objetivo:"Mostrar la experiencia de un cliente satisfecho. Prueba social.", nota:"Pedir permiso para repostear o recrear el testimonio. Formato conversacional.", tags:["reel","promo"] },
+  { n:10, titulo:"Zapata vive — el equipo en acción", formato:"Historia o reel corto", objetivo:"10 de abril — Aniversario luctuoso de Emiliano Zapata. Conectar el orgullo de lo mexicano con la marca. Mostrar al equipo trabajando con mensaje de raíces y cultura.", nota:"🌽 'La tierra es de quien la trabaja — y el elote es de quien lo disfruta.' Tono cálido, orgulloso y cercano. Texto: 'La familia detrás del elote, 100% mexicanos'.", tags:["story","detras","fecha"] },
+  { n:11, titulo:"¿Planeas algo grande este mes?", formato:"Post estático con diseño", objetivo:"Posicionar el servicio de catering y eventos: graduaciones, XV años, cumpleaños.", nota:"Diseño con ejemplos de tipos de eventos. CTA: link en bio al cotizador.", tags:["eventos"] },
+  { n:12, titulo:"Reel 'antes y después' del elote", formato:"Reel con transición", objetivo:"Mostrar el proceso de montaje del elote en 15 segundos con una transición atractiva.", nota:"Usar trend de transición popular en Instagram. Dinámico y visual.", tags:["reel"] },
+  { n:13, titulo:"Pascua — contenido de temporada", formato:"Post estático festivo", objetivo:"Felicitación de Pascua + recordar promo activa. Conectar con el momento familiar.", nota:"Diseño con colores de temporada. No forzado — el elote es el festejo familiar.", tags:["fecha","promo"] },
+  { n:14, titulo:"Cuenta regresiva promo Semana Santa", formato:"Historia con sticker de cuenta regresiva", objetivo:"Generar urgencia en la segunda semana. Recordar que la promo es solo en abril.", nota:"Sticker de cuenta regresiva hacia el fin de abril. Tono: '¡Aprovéchala antes de que se acabe!'", tags:["story","promo"] },
+  { n:15, titulo:"Caso de uso: evento corporativo", formato:"Post o carrusel con diseño", objetivo:"Mostrar que Corn Bros llega a oficinas y eventos corporativos.", nota:"Carrusel: foto de evento + descripción del menú + cómo cotizar. 3 slides máximo.", tags:["eventos"] },
+  { n:16, titulo:"Video cocina — variedad de productos", formato:"Reel 20 segundos", objetivo:"Mostrar la variedad: elote, esquite y otros productos del menú.", nota:"Música activa, ritmo rápido. Cada producto en 3-4 segundos de pantalla.", tags:["reel","detras"] },
+  { n:17, titulo:"Reel con audio trending", formato:"Reel con sonido viral de Instagram", objetivo:"Aprovechar un audio popular para aumentar el alcance orgánico.", nota:"Adaptar el trend de forma creativa al contexto de Corn Bros. Revisar tendencias esa semana.", tags:["reel"] },
+  { n:18, titulo:"¿Cuánto cuesta un evento Corn Bros?", formato:"Historia en slides informativos", objetivo:"Romper la objeción del precio. Mostrar que es accesible y sin compromiso cotizar.", nota:"Texto: 'Cotiza sin compromiso — link en bio'. Slide con rangos de precios aproximados.", tags:["story","eventos"] },
+  { n:19, titulo:"Refresh del post de la promo", formato:"Post estático con diseño nuevo", objetivo:"Re-publicar la promo con un diseño diferente para alcanzar a nuevos seguidores.", nota:"Mismo mensaje, diferente diseño. Guardar en Highlights de Promociones.", tags:["promo"] },
+  { n:20, titulo:"Teaser Día del Niño", formato:"Historia animada", objetivo:"Anunciar que tendrán algo especial para el Día del Niño. Crear expectativa.", nota:"Sticker de pregunta: '¿Qué se les antoja para el 30 de abril?' Divertido y ligero.", tags:["story","fecha"] },
+  { n:21, titulo:"Reel '¿Cuál es tu favorito?'", formato:"Reel con encuesta visual", objetivo:"Mostrar 3 productos y preguntar cuál prefieren. Alto engagement.", nota:"Vincular con historia que tenga sticker de encuesta para que voten.", tags:["reel","story"] },
+  { n:22, titulo:"Día de la Tierra + Corn Bros llega a tu evento", formato:"Post especial + Reel demostración", objetivo:"22 de abril — Día Internacional de la Madre Tierra. Conectar los ingredientes naturales del maíz con el cuidado del planeta. Después mostrar el setup de eventos.", nota:"🌎 Primer post del día: 'Del campo a tu mano — gracias, Madre Tierra'. Segundo contenido: reel del setup de evento con CTA al cotizador. Doble impacto en el día.", tags:["fecha","reel","eventos"] },
+  { n:23, titulo:"Día del Libro + Día del Niño adelantado", formato:"Post especial + Historia", objetivo:"23 de abril — Día Mundial del Libro y Día del Niño (festejo adelantado). Contenido doble: por la mañana frase creativa de libro conectada con el elote, por la tarde contenido lúdico para niños.", nota:"📚 Mañana: 'Si la vida fuera un libro, cada elote sería el mejor capítulo'. Tarde: contenido festivo para niños con promo especial. Diseño alegre, colorido y con energía.", tags:["fecha","promo","story"] },
+  { n:24, titulo:"¿Listos para el fin de semana?", formato:"Historia casual", objetivo:"Mostrar que ambas ubicaciones están activas y listas para el fin de semana.", nota:"Incluir hora de apertura y ubicación. Formato espontáneo, no muy producido.", tags:["story","detras"] },
+  { n:25, titulo:"Reel fin de semana familiar", formato:"Reel 30 segundos lifestyle", objetivo:"Familias disfrutando elotes — conectar con la emoción del fin de semana.", nota:"Texto: 'El plan del finde empieza con un elote'. Tono cálido y familiar.", tags:["reel","fecha"] },
+  { n:26, titulo:"Testimonial de evento pasado", formato:"Post carrusel o historia", objetivo:"Mostrar un evento ya realizado — fotos + detalle del servicio. Prueba social de catering.", nota:"Solicitar cotización para eventos de mayo al final. Puente hacia el siguiente mes.", tags:["eventos","detras"] },
+  { n:27, titulo:"Último aviso promo de abril", formato:"Historia con urgencia", objetivo:"Recordar que la promo termina este mes. Última llamada.", nota:"Tono: 'Solo por abril — aprovéchala hoy'. Sticker de cuenta regresiva si aplica.", tags:["story","promo"] },
+  { n:28, titulo:"Reel de cierre del mes", formato:"Reel resumen / highlight", objetivo:"Compilado del mes: equipo, producto, eventos. Agradecimiento y cierre.", nota:"Texto: 'Gracias por su apoyo en abril'. Tono emotivo y cercano.", tags:["reel","detras"] },
+  { n:29, titulo:"Día de la Danza + teaser mayo", formato:"Reel con tendencia + Historia teaser", objetivo:"29 de abril — Día Internacional de la Danza. Reel con trend de baile viral adaptado a Corn Bros — el equipo bailando o el elote 'bailando'. Después historia teaser de mayo.", nota:"💃 Día de la Danza: usar audio trending de baile, el equipo se anima o se hace montaje divertido con el producto. Máximo engagement orgánico. Al final del día: historia teaser '¿Adivinas qué trae mayo?'", tags:["reel","fecha","story"] },
+  { n:30, titulo:"Día del Niño — contenido principal oficial", formato:"Post especial festivo + Reel + Historia", objetivo:"30 de abril — Día del Niño / Día de la Niñez en México. El elote es para toda la familia. Contenido emotivo, lúdico y festivo. Máximo alcance del mes.", nota:"🎉 Día del Niño oficial en México. Usar todos los formatos disponibles: post de feed, reel emotivo e historia interactiva el mismo día. Mensaje: 'Hoy y siempre, el elote es para los niños de todas las edades'. Considerar promo especial del día o regalo sorpresa para los primeros clientes.", tags:["fecha","reel","promo","story"] },
+];
+
+const cal = document.getElementById('cal');
+
+for (let i = 0; i < 2; i++) {
+  const e = document.createElement('div');
+  e.className = 'day empty';
+  cal.appendChild(e);
+}
+
+let activeEl = null;
+
+data.forEach(d => {
+  const el = document.createElement('div');
+  el.className = 'day';
+  el.innerHTML = `<div class="day-num">${d.n}</div>`;
+  d.tags.slice(0,2).forEach(t => {
+    const p = document.createElement('span');
+    p.className = `pill ${t}`;
+    p.textContent = tagLabels[t] || t;
+    el.appendChild(p);
+  });
+  el.addEventListener('click', () => {
+    if (activeEl) activeEl.classList.remove('active');
+    el.classList.add('active');
+    activeEl = el;
+    showDetail(d);
+    document.getElementById('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  cal.appendChild(el);
+});
+
+function showDetail(d) {
+  document.getElementById('empty').style.display = 'none';
+  const det = document.getElementById('detail');
+  det.classList.add('visible');
+
+  document.getElementById('d-day').textContent = `Día ${d.n} de abril`;
+  document.getElementById('d-title').textContent = d.titulo;
+  document.getElementById('d-formato').textContent = d.formato;
+  document.getElementById('d-objetivo').textContent = d.objetivo;
+  document.getElementById('d-nota').textContent = d.nota;
+
+  const tagRow = document.getElementById('d-tags');
+  tagRow.innerHTML = '';
+  d.tags.forEach(t => {
+    const span = document.createElement('span');
+    span.className = `tag pill ${t}`;
+    span.textContent = tagLabels[t] || t;
+    tagRow.appendChild(span);
+  });
+}
+</script>
+</body>
+</html>
